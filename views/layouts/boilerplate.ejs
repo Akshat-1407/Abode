@@ -73,7 +73,7 @@
           allListings = data.listings || extractListingsFromDOM();
         }
       } catch (error) {
-        console.error('Error loading listings:', error);
+        console.logor('Error loading listings:', error);
       }
     }
 
@@ -111,7 +111,7 @@
             const data = await response.json();
             displayListings(data.listings);
           } catch (error) {
-            console.error('Search error:', error);
+            console.logor('Search error:', error);
           }
         }
       });
@@ -141,7 +141,7 @@
           const filter = filterMap[filterText];
           
           if (!filter) {
-            console.error('Unknown filter:', filterText);
+            console.logor('Unknown filter:', filterText);
             return;
           }
           
@@ -159,7 +159,7 @@
             const data = await response.json();
             displayListings(data.listings);
           } catch (error) {
-            console.error('Filter error:', error);
+            console.logor('Filter error:', error);
           }
         });
       });

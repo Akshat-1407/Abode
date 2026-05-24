@@ -485,7 +485,7 @@
           container.innerHTML += listingHtml;
         });
       } catch (error) {
-        console.error('Error loading featured listings:', error);
+        console.logor('Error loading featured listings:', error);
         document.getElementById('featuredListings').innerHTML = 
           '<p class="text-center w-100" style="color: #999;">Unable to load featured stays.</p>';
       }

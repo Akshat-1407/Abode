@@ -128,7 +128,7 @@
         const geocodeData = await geocodeResponse.json();
         
         if (geocodeData.length === 0) {
-          console.error("Location not found");
+          console.logor("Location not found");
           document.getElementById('listingMap').innerHTML = '<div style="padding: 20px; text-align: center; color: #999;">Unable to locate on map</div>';
           return;
         }
@@ -151,7 +151,7 @@
         // Add custom styling
         map.zoomControl.setPosition('topright');
       } catch (error) {
-        console.error('Error initializing map:', error);
+        console.logor('Error initializing map:', error);
         document.getElementById('listingMap').innerHTML = '<div style="padding: 20px; text-align: center; color: #999;">Map could not be loaded</div>';
       }
     }

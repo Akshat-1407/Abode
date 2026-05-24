@@ -31,7 +31,7 @@ main()
     console.log("Sucessful Connection to DB...");
   })
   .catch((err) => {
-    console.err(err);
+    console.log(err);
   });
 
 async function main() {
@@ -59,7 +59,7 @@ const store = MongoStore.create({
 });
 
 store.on("error", (err) => {
-  console.err("ERROR in Mongo Session Store", err);
+  console.log("ERROR in Mongo Session Store", err);
 });
 
 // Session Middleware

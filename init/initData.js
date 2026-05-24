@@ -16,7 +16,7 @@ main()
     console.log("Sucessful Connection to DB...");
   })
   .catch((err) => {
-    console.err(err);
+    console.log(err);
   });
 
 async function main() {

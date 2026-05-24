@@ -1,224 +1,266 @@
-## Authentication
-It is the process of verifying who someone is.
+# Abode - Unique Stays & Experiences
 
-## Authorization
-It is the process of veryfying what specific applications, files and data a user has access to.
+A full-stack web application for discovering and booking unique stays around the world, inspired by Airbnb. Browse properties by category, search in real-time, and connect with hosts to find your perfect destination.
 
-## Storing Passwords
-We `NEVER` store passwords as it is. We store their `hashed` form
+## 🌟 Features
 
-password -> hashing function -> hashed form
-hello, world -> hashing function -> af36gv4rd8s5v14g78e8sw25d4gbcx56s1z2d5g4k8g6
+- **Dynamic Search** - Real-time search filtering across title, description, location, and country
+- **Category Browsing** - 11 curated categories (Trending, Mountains, Swimming, Rooms, Castles, Camping, Boats, Farm, Arctic, Domes, Iconic)
+- **Responsive Design** - Mobile-friendly interface with Bootstrap 5
+- **User Authentication** - Secure login/signup with Passport.js and bcrypt password hashing
+- **Listing Management** - Create, edit, and delete property listings
+- **Reviews & Ratings** - Users can leave reviews with ratings for stays
+- **Featured Destinations** - Dynamic hero section showcasing top listings
+- **Session Management** - Persistent sessions with MongoDB store
+- **Input Validation** - Joi schema validation for data integrity
 
-## Hashing
-* For every input there is a fixed output
-* They are one way functions. We can't get input from output.
-* For a different input there is a different output but of same length.
-* Small changes in input should bring large changes in output.
+## 🛠️ Tech Stack
 
-## Salting
-Password salting is a technique to protect password stored in database by adding a string of 32 or more characters and then hashing them.
+**Backend:**
+- Node.js & Express.js (v5.1.0)
+- MongoDB (Local database at mongodb://127.0.0.1:27017/wanderlust)
+- Mongoose (ODM for MongoDB)
+- Passport.js + passport-local-mongoose (Authentication)
+- express-session & connect-mongo (Session management)
+- Joi (Input validation)
 
+**Frontend:**
+- EJS with ejs-mate (Template engine)
+- Bootstrap 5.3.5 (CSS framework)
+- Font Awesome 6.7.2 (Icons)
+- Vanilla JavaScript (Dynamic search & filters)
 
-## connect-flash    
-The flash is a special area of the session used for storing messages. Messages are written to the flash and cleared after being displayed to the user.
+**Development Tools:**
+- Faker.js (Test data generation)
 
+## 📦 Installation
 
-```javascript
-    // app.js
-    const express = require("express");
-    const app = express();
-    const session = require("express-session")
-    const flash = require('connect-flash');
-
-    app.use(session({
-        secret: 'keyboard cat',
-        resave: false,
-        saveUninitialized: true,
-    }));
-
-    app.get("/regsiter", (req, res) => {
-        let {name} = req.querry;
-        req.session.name = name;
-        req.flash("success", "user registered sucessfully!")
-        res.redirect("/hello");
-    });
-
-    app.get("/hello", (req, res) => {
-        res.render("page.ejs", {name: req.session.name, msg: req.flash("success")});
-    });
-
-    // page.ejs
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Page</title>
-    </head>
-    <body>
-        <%= msg %>
-        <h2>Hello, <%= name %> </h2>
-    </body>
-    </html>
+1. **Clone the repository**
+```bash
+git clone <repository-url>
+cd "AirBnb Clone"
 ```
 
-
-## Cookies in Express.js
-Cookies are small pieces of data stored in the user's browser, often used to maintain sessions or store user preferences. In Express.js, cookies help manage authentication, track users, and store temporary data.
-
-```javascript
-    const express = require("express");
-    const cookieParser = require("cookie-parser");
-
-    const app = express();
-    app.use(cookieParser()); // Middleware to parse cookies
-
-    // Setting a cookie
-    app.get("/set-cookie", (req, res) => {
-        res.cookie("user", "Akshat");
-        res.send("Cookie set!");
-    });
-
-    // Reading a cookie
-    app.get("/get-cookie", (req, res) => {
-        res.send(`User cookie: ${req.cookies.user}`);
-    });
-
-    // Deleting a cookie
-    app.get("/clear-cookie", (req, res) => {
-        res.clearCookie("user");
-        res.send("Cookie cleared!");
-    });
-
-    app.listen(3000, () => console.log("Server running on port 3000"));
-```
-___
-
-## Signed Cookies in Express.js
-Signed cookies add an extra layer of security by preventing tampering. When a cookie is signed, its value is encrypted using a secret key, ensuring the integrity of the data.
-
-```javascript
-    const express = require("express");
-    const cookieParser = require("cookie-parser");
-
-    const app = express();
-    app.use(cookieParser("your_secret_key")); // Enable signed cookies
-
-    // Setting a signed cookie
-    app.get("/set-signed-cookie", (req, res) => {
-        res.cookie("user", "Akshat", { signed: true });
-        res.send("Signed cookie set!");
-    });
-
-    // Reading a signed cookie
-    app.get("/get-signed-cookie", (req, res) => {
-        res.send(`User: ${req.signedCookies.user}`);
-    });
-
-    app.listen(3000, () => console.log("Server running on port 3000"));
+2. **Install dependencies**
+```bash
+npm install
 ```
 
-
-## res.locals
-Use this property to set variables accessible in templates rendered with res.render. The variables set on res.locals are available within a single request-response cycle, and will not be shared between requests.
-
-```javascript
-    // app.js
-    const express = require("express");
-    const app = express();
-    const session = require("express-session")
-    const flash = require('connect-flash');
-
-    app.use(session({
-        secret: 'keyboard cat',
-        resave: false,
-        saveUninitialized: true,
-    }));
-
-    app.get("/regsiter", (req, res) => {
-        let {name = "anonymous"} = req.querry;
-        req.session.name = name;
-
-        if (name === "anonymous") {
-            req.flash("error", "user not registered")
-        }
-        else {
-            req.flash("success", "user is registered sucessfully");
-        }
-
-        res.redirect("/hello");
-    });
-
-    app.get("/hello", (req, res) => {
-        res.locals.successMsg = req.flash("success");
-        res.locals.errorMsg = req.flash("error");
-        res.render("page.ejs", {name: req.session.name});
-    });
-
-    // page.ejs
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Page</title>
-    </head>
-    <body>
-        <%= successMsg %>
-        <%= errorMsg %>
-        <h2>Hello, <%= name %> </h2>
-    </body>
-    </html>
+3. **Ensure MongoDB is running**
+```bash
+# Make sure MongoDB is running at localhost:27017
+mongod
 ```
 
-
-### Express Sessions -
-
-```javascript
-    const express = require("express");
-    const app = express();
-    const session = require("express-session")
-
-    app.use(session({
-        secret: 'keyboard cat',
-        resave: false,
-        saveUninitialized: true,
-    }));
-
-    app.get("/reqCount", (req, res) => {
-        if (req.session.count) {
-            req.session.count++;
-        }
-        else {
-            req.session.count = 1;
-        };
-
-        req.send(`You sent a request ${req.session.count} times`);
-    });
+4. **Seed the database** (Optional - populates with test data)
+```bash
+cd init
+node initData.js
+cd ..
 ```
-___
 
-### Storing and using Session info -
-
-```javascript
-    const express = require("express");
-    const app = express();
-    const session = require("express-session")
-
-    app.use(session({
-        secret: 'keyboard cat',
-        resave: false,
-        saveUninitialized: true,
-    }));
-
-    app.get("/regsiter", (req, res) => {
-        let {name} = req.querry;
-        req.session.name = name;
-        res.redirect("/hello");
-    });
-
-    app.get("/hello", (req, res) => {
-        console.log(`Hello, ${req.session.name}`);
-    });
+5. **Start the application**
+```bash
+node app.js
 ```
+
+6. **Access the application**
+- Open browser and navigate to `http://localhost:8080`
+
+## 🚀 Usage
+
+### For Guests
+1. Visit the home page to explore categories or use the search bar
+2. Browse listings in the Explore Stays section
+3. Sign up or log in to book stays and leave reviews
+4. Search and filter by category to find your perfect destination
+
+### For Hosts
+1. Sign up for an account
+2. Click "List Your Space" in the navbar
+3. Fill in property details and upload images
+4. Manage your listings and view guest reviews
+
+### Search & Filter
+- **Real-time Search**: Type in the navbar search bar for instant results
+- **Category Filters**: Click category chips to browse specific types of stays
+- **Featured Section**: View curated listings on the home page
+
+## 📁 Project Structure
+
+```
+AirBnb Clone/
+├── app.js                 # Main Express application
+├── middleware.js          # Authentication & validation middleware
+├── schema.js             # Joi validation schemas
+├── package.json          # Dependencies
+├── init/
+│   └── initData.js       # Database seeding script
+├── models/
+│   ├── listing.js        # Listing schema & model
+│   ├── review.js         # Review schema & model
+│   └── user.js           # User schema & model (with Passport)
+├── routes/
+│   ├── listing.js        # Listing CRUD & search/filter routes
+│   ├── review.js         # Review routes
+│   └── user.js           # Authentication routes
+├── utils/
+│   ├── expressError.js   # Custom error class
+│   └── wrapAsync.js      # Async error handler wrapper
+├── views/
+│   ├── home.ejs          # Landing page
+│   ├── error.ejs         # Error page
+│   ├── layouts/
+│   │   └── boilerplate.ejs  # Master template
+│   ├── includes/
+│   │   ├── navbar.ejs    # Navigation bar
+│   │   ├── footer.ejs    # Footer
+│   │   └── flash.ejs     # Flash messages
+│   ├── listings/
+│   │   ├── index.ejs     # All listings view
+│   │   ├── show.ejs      # Single listing detail
+│   │   ├── new.ejs       # Create listing form
+│   │   └── edit.ejs      # Edit listing form
+│   └── users/
+│       ├── signup.ejs    # Sign up form
+│       └── login.ejs     # Login form
+└── public/
+    └── css/
+        ├── style.css     # Main stylesheet
+        └── rating.css    # Rating component styles
+```
+
+## 🔑 Key Routes
+
+### Listings
+- `GET /listings` - View all listings
+- `GET /listings/new` - Create new listing form
+- `POST /listings` - Create listing
+- `GET /listings/:id` - View listing details
+- `GET /listings/:id/edit` - Edit listing form
+- `PUT /listings/:id` - Update listing
+- `DELETE /listings/:id` - Delete listing
+- `GET /listings/search/api` - API search endpoint (JSON)
+- `GET /listings/filter/api` - API filter endpoint (JSON)
+
+### Users
+- `GET /signup` - Sign up page
+- `POST /signup` - Register user
+- `GET /login` - Login page
+- `POST /login` - Authenticate user
+- `GET /logout` - Logout user
+
+### Reviews
+- `POST /listings/:id/reviews` - Add review
+- `DELETE /listings/:id/reviews/:reviewId` - Delete review
+
+## 🎨 Features in Detail
+
+### Real-Time Search
+- Search updates as you type in the navbar
+- Results filter across title, description, location, and country
+- Case-insensitive matching
+
+### Category Filtering
+- 11 curated categories with keyword matching
+- Trending shows latest listings
+- Each category has a dedicated icon
+
+### Authentication
+- Secure password hashing with bcrypt
+- Session-based authentication
+- Role-based access control (owner checks for edit/delete)
+
+### Data Validation
+- Client-side form validation
+- Server-side Joi schema validation
+- Custom error handling
+
+## 📊 Database Schema
+
+### Listing
+```javascript
+{
+  title: String,
+  description: String,
+  image: String (URL),
+  price: Number,
+  location: String,
+  country: String,
+  owner: ObjectId (User reference),
+  reviews: [ObjectId] (Review references),
+  createdAt: Date
+}
+```
+
+### User
+```javascript
+{
+  username: String,
+  email: String,
+  password: String (hashed by passport-local-mongoose),
+  createdAt: Date
+}
+```
+
+### Review
+```javascript
+{
+  rating: Number (1-5),
+  comments: String,
+  author: ObjectId (User reference),
+  createdAt: Date
+}
+```
+
+## 🧪 Testing
+
+To seed the database with test data:
+```bash
+cd init
+node initData.js
+```
+
+This creates:
+- 20 unique listings with diverse categories
+- 6 test users (username: any of the users, password: "hello")
+- 9 reviews per listing with ratings
+
+## 🎯 Future Enhancements
+
+- [ ] Booking/reservation system
+- [ ] Payment integration (Stripe/Razorpay)
+- [ ] User profile dashboard
+- [ ] Wishlist/favorites functionality
+- [ ] Advanced filtering (price range, ratings)
+- [ ] Messaging between hosts and guests
+- [ ] Email notifications
+- [ ] Admin dashboard
+- [ ] Analytics & trending data
+- [ ] Social media integration
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📝 License
+
+This project is open source and available under the MIT License.
+
+## 👨‍💻 Author
+
+Created as a full-stack learning project to demonstrate modern web development practices.
+
+## 📧 Contact & Support
+
+For questions or support, please open an issue in the repository.
+
+---
+
+**Built with ❤️ using Node.js, Express, and MongoDB**

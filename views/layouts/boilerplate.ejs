@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Wanderlust</title>
+  <title>Abode</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
@@ -48,13 +48,171 @@
             event.preventDefault()
             event.stopPropagation()
           }
-
           form.classList.add('was-validated')
         }, false)
       })
     })()
   </script>
 
+  <!-- Dynamic Search & Filter Script -->
+  <script>
+    const searchInput = document.getElementById('searchInput');
+    const listingsContainer = document.querySelector('.row');
+    let allListings = [];
+    let currentFilter = null;
+
+    // Fetch all listings on page load
+    async function loadAllListings() {
+      try {
+        const response = await fetch('/listings/search/api?query=');
+        const data = await response.json();
+        // Store a copy of initial listings if on listings page
+        if (listingsContainer) {
+          allListings = data.listings || extractListingsFromDOM();
+        }
+      } catch (error) {
+        console.error('Error loading listings:', error);
+      }
+    }
+
+    // Extract listings from DOM if not on listings page
+    function extractListingsFromDOM() {
+      const listings = [];
+      const listingLinks = document.querySelectorAll('.listing-link');
+      listingLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        const id = href.replace('/listings/', '');
+        const title = link.querySelector('.card-title').textContent.trim();
+        const price = link.querySelector('.card-text').textContent.split('/')[0].trim();
+        const image = link.querySelector('.listing-img').src;
+        listings.push({ _id: id, title, price, image });
+      });
+      return listings;
+    }
+
+    // Real-time search function
+    if (searchInput && listingsContainer) {
+      loadAllListings();
+
+      searchInput.addEventListener('input', async function() {
+        const query = this.value.trim();
+        currentFilter = null;  // Clear filter when user types
+        removeFilterHighlight();
+
+        if (query === '') {
+          // Show all listings
+          displayListings(allListings);
+        } else {
+          // Fetch search results
+          try {
+            const response = await fetch(`/listings/search/api?query=${encodeURIComponent(query)}`);
+            const data = await response.json();
+            displayListings(data.listings);
+          } catch (error) {
+            console.error('Search error:', error);
+          }
+        }
+      });
+    }
+
+    // Add filter click handlers
+    function setupFilterHandlers() {
+      const filterOptions = document.querySelectorAll('.filter-options');
+      const filterMap = {
+        'Trending': 'trending',
+        'Rooms': 'rooms',
+        'Iconic Citis': 'iconic',
+        'Mountains': 'mountains',
+        'Castles': 'castles',
+        'Swimming': 'swimming',
+        'Camping': 'camping',
+        'Farma': 'farm',
+        'Boats': 'boats',
+        'Artic': 'arctic',
+        'Domes': 'domes'
+      };
+      
+      filterOptions.forEach((option) => {
+        option.addEventListener('click', async function() {
+          // Extract filter name from the text content
+          const filterText = this.querySelector('p')?.textContent.trim();
+          const filter = filterMap[filterText];
+          
+          if (!filter) {
+            console.error('Unknown filter:', filterText);
+            return;
+          }
+          
+          currentFilter = filter;
+          removeFilterHighlight();
+          this.classList.add('filter-active');
+          
+          // Clear search input
+          if (searchInput) {
+            searchInput.value = '';
+          }
+          
+          try {
+            const response = await fetch(`/listings/filter/api?category=${encodeURIComponent(filter)}`);
+            const data = await response.json();
+            displayListings(data.listings);
+          } catch (error) {
+            console.error('Filter error:', error);
+          }
+        });
+      });
+    }
+
+    function removeFilterHighlight() {
+      const filterOptions = document.querySelectorAll('.filter-options');
+      filterOptions.forEach(option => option.classList.remove('filter-active'));
+    }
+
+    // Initialize filter handlers when DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', setupFilterHandlers);
+    } else {
+      setupFilterHandlers();
+    }
+
+    // Display listings in the DOM
+    function displayListings(listings) {
+      listingsContainer.innerHTML = '';
+      
+      if (listings.length === 0 && searchInput.value.trim() !== '') {
+        listingsContainer.innerHTML = `
+          <div class="col-12 d-flex justify-content-center flex-column align-items-center">
+            <div class="no-listings-message">
+              <h3>No Listings Found</h3>
+              <p>
+                We couldn't find any listings matching your search.
+              </p>
+              <span>Try changing filters or searching something else.</span>
+            </div>
+          </div>
+        `;
+        return;
+      }
+      listings.forEach(listing => {
+        const listingCard = document.createElement('a');
+        listingCard.href = `/listings/${listing._id}`;
+        listingCard.className = 'listing-link';
+        listingCard.innerHTML = `
+          <div class="card listing-card col mb-4">
+            <img src="${listing.image}" class="card-img-top listing-img" alt="listing_image" />
+            <div class="card-img-overlay"></div>
+            <div class="card-body">
+              <h6 class="card-title"><b>${listing.title}</b></h6>
+              <p class="card-text">
+                &#8377; ${Number(listing.price).toLocaleString('en-IN')} / night <i class="gst-tax">&nbsp; &nbsp; + 18% GST </i>
+              </p>
+            </div>
+          </div>
+        `;
+        listingsContainer.appendChild(listingCard);
+      });
+    }
+  </script>
 
   <script>
     // Password Toggler

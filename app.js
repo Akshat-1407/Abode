@@ -111,6 +111,11 @@ app.use((req, res, next) => {
 
 
 // Routes
+// Landing page (home)
+app.get("/", (req, res) => {
+  res.render("./landing/landing.ejs");
+});
+
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
 app.use("/", userRouter);
@@ -129,7 +134,7 @@ app.use((req, res, next) => {
 app.use((err, req, res, next) => {
   let {statusCode=500, message="Something Went Wrong."} = err;
   // res.status(statusCode).send(message);
-  res.render("error.ejs", {err});
+  res.render("./error/error.ejs", {err});
 });
 
 

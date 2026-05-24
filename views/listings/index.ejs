@@ -55,14 +55,6 @@
           <div><i class="fa-solid fa-landmark-dome"></i></div>
           <p>Domes</p>
         </div>
-        <!-- Tax switch inside collapsible -->
-        <div class="form-check-reverse form-switch tax-switch ms-2">
-          <label class="switch-label">
-            <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefaultCollapse">
-            <span class="switch-slider"></span>
-            <span class="switch-text">Display total after taxes</span>
-          </label>
-        </div>
       </div>
     </div>
 
@@ -112,13 +104,6 @@
         <div><i class="fa-solid fa-landmark-dome"></i></div>
         <p>Domes</p>
       </div>
-      <div class="form-check-reverse form-switch tax-switch">
-        <label class="switch-label">
-          <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault">
-          <span class="switch-slider"></span>
-          <span class="switch-text">Display total after taxes</span>
-        </label>
-      </div>
     </div>
 
 
@@ -142,39 +127,3 @@
     </div>
     <br /><br /><br />
   </body>
-
-
-
-<script>
-  // Get both tax switches
-  const taxSwitches = [
-    document.getElementById('switchCheckDefault'),
-    document.getElementById('switchCheckDefaultCollapse')
-  ];
-
-  // Get all GST tax elements
-  const gstTaxes = document.querySelectorAll('.gst-tax');
-
-  // Function to toggle GST display
-  function toggleGST(show) {
-    gstTaxes.forEach(el => {
-      el.style.display = show ? 'inline' : 'none';
-    });
-  }
-
-  // Listen for changes on both switches
-  taxSwitches.forEach(sw => {
-    if (sw) {
-      sw.addEventListener('change', function() {
-        // Sync both switches
-        taxSwitches.forEach(other => {
-          if (other && other !== sw) other.checked = sw.checked;
-        });
-        toggleGST(sw.checked);
-      });
-    }
-  });
-
-  // On page load, ensure GST is hidden
-  toggleGST(false);
-</script>

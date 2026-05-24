@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Abode - Book Unique Stays & Experiences</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
+    rel="stylesheet" />
+  <link rel="icon" type="image/jpeg" href="https://th.bing.com/th/id/OIP.jGZEEP2Nl2FF3KtOYs-C1AHaHa?rs=1&pid=ImgDetMain">
+  <style>
+    * {
+      font-family: "Plus Jakarta Sans", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+
+    .hero-section {
+      background: linear-gradient(135deg, rgba(254, 66, 77, 0.1) 0%, rgba(255, 182, 193, 0.1) 100%), 
+                  url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.4);
+      z-index: 1;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 800px;
+      animation: slideInDown 0.8s ease-out;
+    }
+
+    @keyframes slideInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero-content h1 {
+      font-size: 4rem;
+      font-weight: 800;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+    }
+
+    .hero-content p {
+      font-size: 1.5rem;
+      margin-bottom: 40px;
+      text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .cta-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      justify-content: center;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .cta-buttons a {
+      margin: 0 10px;
+    }
+
+    .btn-primary-custom {
+      background-color: #fe424d;
+      color: white;
+      padding: 12px 35px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .btn-primary-custom:hover {
+      background-color: #ff2e3f;
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(254, 66, 77, 0.3);
+      color: white;
+    }
+
+    .btn-secondary-custom {
+      background-color: transparent;
+      color: white;
+      padding: 12px 35px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 600;
+      border: 2px solid white;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .btn-secondary-custom:hover {
+      background-color: white;
+      color: #fe424d;
+      transform: translateY(-3px);
+    }
+
+    .features-section {
+      padding: 80px 40px;
+      background-color: #f9f9f9;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 60px;
+      color: #333;
+    }
+
+    .feature-card {
+      background: white;
+      padding: 40px 30px;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      height: 100%;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .feature-card i {
+      font-size: 3rem;
+      color: #fe424d;
+      margin-bottom: 20px;
+    }
+
+    .feature-card h3 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 15px;
+      color: #333;
+    }
+
+    .feature-card p {
+      color: #666;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .listings-preview-section {
+      padding: 80px 40px;
+      background-color: white;
+    }
+
+    .listing-card-preview {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      height: 100%;
+    }
+
+    .listing-card-preview:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .listing-card-preview img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+    }
+
+    .listing-card-preview .card-body {
+      padding: 20px;
+    }
+
+    .listing-card-preview h5 {
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    .listing-card-preview p {
+      color: #fe424d;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .cta-section {
+      background: linear-gradient(135deg, #fe424d 0%, #ff6b7a 100%);
+      padding: 80px 40px;
+      text-align: center;
+      color: white;
+    }
+
+    .cta-section h2 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 20px;
+    }
+
+    .cta-section p {
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+    }
+
+    .navbar-custom {
+      background-color: white !important;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar-custom .navbar-brand {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #fe424d !important;
+    }
+
+    .navbar-custom .nav-link {
+      font-weight: 600;
+      color: #333 !important;
+      transition: color 0.3s ease;
+    }
+
+    .navbar-custom .nav-link:hover {
+      color: #fe424d !important;
+    }
+
+    .navbar-custom .btn-danger {
+      background-color: #fe424d !important;
+      border-color: #fe424d !important;
+    }
+
+    @media (max-width: 768px) {
+      .hero-content h1 {
+        font-size: 2.5rem;
+      }
+
+      .hero-content p {
+        font-size: 1.1rem;
+      }
+
+      .section-title {
+        font-size: 1.8rem;
+      }
+
+      .search-box {
+        flex-direction: column;
+      }
+
+      .search-box input {
+        min-width: 100%;
+      }
+    }
+
+    .scroll-animation {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.6s ease;
+    }
+
+    .scroll-animation.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .category-chip {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 15px 10px;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+      color: #333;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .category-chip:hover {
+      background: white;
+      transform: scale(1.05) translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .category-chip i {
+      font-size: 1.8rem;
+      color: #fe424d;
+    }
+
+    .category-chip span {
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-md navbar-custom sticky-top">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/"><i class="fa-regular fa-compass"></i> &nbsp; Abode</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="navbar-nav ms-auto">
+          <a class="nav-link mt-1" href="/listings">Explore Stays</a>
+          <% if (!currUser) { %>
+            <a class="nav-link mt-1" href="/signup">Sign Up</a>
+            <a class="nav-link" href="/login">
+              <button class="btn btn-outline-danger">Login</button>
+            </a>
+          <% } %>
+          <% if (currUser) { %>
+            <a class="nav-link mt-1" href="/listings/new">List Your Stay</a>
+            <a class="nav-link" href="/logout">
+              <button class="btn btn-outline-danger">Logout</button>
+            </a>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <h1>Discover Your Next Adventure</h1>
+      <p>Explore unique stays and experiences around the world</p>
+
+      <div class="cta-buttons">
+        <div style="text-align: center; width: 100%; margin-bottom: 20px;">
+          <p style="font-size: 1.3rem; font-weight: 700; color: white; margin-bottom: 20px; text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);">Ready to Start?</p>
+          <p style="font-size: 1rem; color: rgba(255, 255, 255, 0.9); margin-bottom: 30px; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);">Find your perfect stay or list your space today</p>
+        </div>
+        <a href="/listings" class="btn-primary-custom">Browse All Stays</a>
+        <% if (!currUser) { %>
+          <a href="/signup" class="btn-secondary-custom">Start Hosting</a>
+        <% } %>
+        <% if (currUser) { %>
+          <a href="/listings/new" class="btn-secondary-custom">List Your Space</a>
+        <% } %>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features-section">
+    <h2 class="section-title">Why Choose Abode?</h2>
+    <div class="row g-4">
+      <div class="col-md-6 col-lg-3">
+        <div class="feature-card scroll-animation">
+          <i class="fa-solid fa-globe"></i>
+          <h3>Explore Globally</h3>
+          <p>Discover unique stays in over 100 countries. From mountains to beaches, find your perfect destination.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="feature-card scroll-animation">
+          <i class="fa-solid fa-shield"></i>
+          <h3>Safe & Secure</h3>
+          <p>Travel with confidence. All hosts are verified and transactions are protected with our guarantee.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="feature-card scroll-animation">
+          <i class="fa-solid fa-star"></i>
+          <h3>Quality Stays</h3>
+          <p>Curated properties and authentic experiences. Every listing is carefully selected for your comfort.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="feature-card scroll-animation">
+          <i class="fa-solid fa-headset"></i>
+          <h3>24/7 Support</h3>
+          <p>Our dedicated support team is always here to help. Get assistance whenever you need it.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Listings Section -->
+  <section class="listings-preview-section">
+    <h2 class="section-title">Featured Destinations</h2>
+    <div class="row g-4" id="featuredListings">
+      <p class="text-center w-100" style="color: #999;">Loading featured stays...</p>
+    </div>
+    <div class="text-center mt-5">
+      <a href="/listings" class="btn-primary-custom">View All Stays</a>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <h2>Ready to Explore the World?</h2>
+    <p>Start your journey with Abode today</p>
+    <a href="/listings" class="btn btn-light btn-lg" style="border-radius: 50px; font-weight: 600;">
+      Explore Now <i class="fa-solid fa-arrow-right ms-2"></i>
+    </a>
+  </section>
+
+  <!-- Footer -->
+  <footer style="background-color: #222; color: white; padding: 40px; text-align: center;">
+    <p>&copy; 2026 Abode. All rights reserved.</p>
+    <p>
+      <a href="#" style="color: #fe424d; text-decoration: none; margin: 0 15px;">Privacy Policy</a>
+      <a href="#" style="color: #fe424d; text-decoration: none; margin: 0 15px;">Terms of Service</a>
+      <a href="#" style="color: #fe424d; text-decoration: none; margin: 0 15px;">Contact Us</a>
+    </p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // Navigate to listings page
+    function goToListings() {
+      window.location.href = '/listings';
+    }
+
+    // Load featured listings
+    async function loadFeaturedListings() {
+      try {
+        const response = await fetch('/listings/search/api?query=');
+        const data = await response.json();
+        const listings = data.listings.slice(0, 3); // Get first 3 listings
+        
+        const container = document.getElementById('featuredListings');
+        container.innerHTML = '';
+
+        listings.forEach(listing => {
+          const listingHtml = `
+            <div class="col-md-6 col-lg-4">
+              <a href="/listings/${listing._id}" style="text-decoration: none; color: inherit;">
+                <div class="listing-card-preview">
+                  <img src="${listing.image}" alt="${listing.title}" />
+                  <div class="card-body">
+                    <h5>${listing.title}</h5>
+                    <p>₹${Number(listing.price).toLocaleString('en-IN')} / night</p>
+                    <small style="color: #999;">${listing.location}, ${listing.country}</small>
+                  </div>
+                </div>
+              </a>
+            </div>
+          `;
+          container.innerHTML += listingHtml;
+        });
+      } catch (error) {
+        console.error('Error loading featured listings:', error);
+        document.getElementById('featuredListings').innerHTML = 
+          '<p class="text-center w-100" style="color: #999;">Unable to load featured stays.</p>';
+      }
+    }
+
+    // Scroll animation for elements
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver(function(entries) {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.scroll-animation').forEach(el => observer.observe(el));
+
+    // Load featured listings on page load
+    window.addEventListener('load', loadFeaturedListings);
+  </script>
+</body>
+
+</html>

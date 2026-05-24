@@ -1,6 +1,6 @@
-// if (process.env.NODE_ENV != "production") {
-//   require("dotenv").config();
-// }
+if (process.env.NODE_ENV != "production") {
+  require("dotenv").config({ path: require("path").join(__dirname, "..", ".env") });
+}
 
 const mongoose = require("mongoose");
 const Listing = require("../models/listing.js");
@@ -8,18 +8,23 @@ const Review = require("../models/review.js");
 const User = require("../models/user.js");
 const { faker } = require('@faker-js/faker');
 
-const Url = "mongodb://127.0.0.1:27017/wanderlust";
+const Url = process.env.ATLASDB_URL;
 
-// const Url = process.env.ATLASDB_URL;
-console.log(Url);
+// MongoDB Connection
+main()
+  .then(() => {
+    console.log("Sucessful Connection to DB...");
+  })
+  .catch((err) => {
+    console.err(err);
+  });
 
 async function main() {
   await mongoose.connect(Url);
-  console.log("Connected to DB...");
 }
 
 const NUM_USERS = 6;
-const NUM_LISTINGS = 20;
+const NUM_LISTINGS = 30;
 const REVIEWS_PER_LISTING = 9;
 
 const sampleImages = [
@@ -41,7 +46,50 @@ const sampleImages = [
   "https://images.unsplash.com/photo-1618140052121-39fc6db33972?auto=format&fit=crop&w=800&q=60",
   "https://images.unsplash.com/photo-1533619239233-6280475a633a?auto=format&fit=crop&w=800&q=60",
   "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=800&q=60",
-  "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=800&q=60"
+  "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=800&q=60",
+  "https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=800&q=60",
+  "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?auto=format&fit=crop&w=800&q=60",
+  "https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=800&q=60",
+  "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=800&q=60",
+  "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=800&q=60",
+  "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=800&q=60",
+  "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=800&q=60",
+  "https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=800&q=60",
+  "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?auto=format&fit=crop&w=800&q=60",
+  "https://images.unsplash.com/photo-1511300636408-a63a89df3482?auto=format&fit=crop&w=800&q=60"
+];
+
+const realLocations = [
+  { city: "Bali", country: "Indonesia" },
+  { city: "Paris", country: "France" },
+  { city: "Tokyo", country: "Japan" },
+  { city: "Barcelona", country: "Spain" },
+  { city: "New York", country: "USA" },
+  { city: "London", country: "United Kingdom" },
+  { city: "Amsterdam", country: "Netherlands" },
+  { city: "Rome", country: "Italy" },
+  { city: "Bangkok", country: "Thailand" },
+  { city: "Dubai", country: "United Arab Emirates" },
+  { city: "Sydney", country: "Australia" },
+  { city: "Singapore", country: "Singapore" },
+  { city: "Venice", country: "Italy" },
+  { city: "Kyoto", country: "Japan" },
+  { city: "Istanbul", country: "Turkey" },
+  { city: "Prague", country: "Czech Republic" },
+  { city: "Berlin", country: "Germany" },
+  { city: "Mexico City", country: "Mexico" },
+  { city: "Barcelona", country: "Spain" },
+  { city: "Bangkok", country: "Thailand" },
+  { city: "Seoul", country: "South Korea" },
+  { city: "Vancouver", country: "Canada" },
+  { city: "Lisbon", country: "Portugal" },
+  { city: "Vienna", country: "Austria" },
+  { city: "Florence", country: "Italy" },
+  { city: "Barcelona", country: "Spain" },
+  { city: "Marrakech", country: "Morocco" },
+  { city: "Chiang Mai", country: "Thailand" },
+  { city: "Reykjavik", country: "Iceland" },
+  { city: "Miami", country: "USA" }
 ];
 
 const listingTypes = [
@@ -64,7 +112,17 @@ const listingTypes = [
   { type: "Cave Home", desc: "A charming cottage featuring private room accommodations in a unique cave setting. Warm interiors with comfortable rooms create a cozy atmosphere. A fascinating escape for those seeking private room luxury and comfort." },
   { type: "Dome House", desc: "A futuristic dome-shaped home offering panoramic views in innovative dome architecture. This unique dome provides an eco-friendly dome experience. Perfect for stargazing and enjoying open-concept dome living with dome views." },
   { type: "Tiny Home", desc: "Nestled in the mountains, this cozy lodge offers stunning mountain vistas and mountain adventures. Enjoy mountain hiking trails, fresh mountain air, and comfortable mountain accommodations for mountain enthusiasts." },
-  { type: "Eco Lodge", desc: "Sustainability meets adventure in this eco-friendly camping ground designed harmoniously. Enjoy camping in designated areas, campfires, and green camping initiatives. Ideal for eco-camping seekers and conscious camping travelers." }
+  { type: "Eco Lodge", desc: "Sustainability meets adventure in this eco-friendly camping ground designed harmoniously. Enjoy camping in designated areas, campfires, and green camping initiatives. Ideal for eco-camping seekers and conscious camping travelers." },
+  { type: "Luxury Penthouse", desc: "Experience urban elegance in this stunning penthouse with floor-to-ceiling windows and city skyline views. Modern furnishings, premium amenities, and breathtaking vistas create the ultimate urban escape for discerning travelers." },
+  { type: "Garden Villa", desc: "A serene villa surrounded by lush gardens and tropical plants. Enjoy peaceful garden walks, outdoor dining, and natural beauty at every turn. Perfect for those seeking tranquility and botanical beauty in a luxurious garden setting." },
+  { type: "Beachfront Resort", desc: "An all-inclusive beachfront paradise with direct ocean access and spectacular sunsets. Enjoy water sports, beach bars, and pristine sandy shores. This resort combines relaxation and adventure for the ultimate beach vacation experience." },
+  { type: "Mountain Lodge", desc: "A cozy mountain lodge with fireplace, mountain views, and rustic charm. Perfect for hiking adventures, mountain exploration, and peaceful mountain retreats. Experience authentic mountain hospitality in this charming lodge." },
+  { type: "Historic Manor", desc: "An elegant historic manor home with period architecture and classic charm. Featuring grand staircases, ornate details, and timeless elegance. A sophisticated retreat for those who appreciate historic character and classic style." },
+  { type: "Coastal Cottage", desc: "A charming coastal cottage with ocean breezes and seaside charm. Walking distance to beaches, cliffs, and local coastal attractions. Enjoy a peaceful coastal life in this delightful beachside cottage." },
+  { type: "Modern Studio", desc: "A sleek, contemporary studio apartment with minimalist design and smart amenities. Perfect for travelers seeking modern comfort with a stylish urban edge. This studio offers efficiency and elegance in equal measure." },
+  { type: "Riverside Cabin", desc: "A peaceful cabin nestled along a scenic riverside. Enjoy fishing, kayaking, and riverside picnics. Perfect for nature lovers seeking water access and riverside tranquility in a comfortable cabin setting." },
+  { type: "Garden Cottage", desc: "A romantic cottage with private garden, outdoor patio, and natural surroundings. Enjoy morning coffee in your garden and sunset walks. This intimate cottage is perfect for couples seeking peaceful garden retreats." },
+  { type: "Hilltop Villa", desc: "An exclusive hilltop villa with panoramic views, infinity pools, and luxury appointments. Perched above the world with stunning vistas. The ultimate luxury retreat for those seeking exclusive hilltop living." }
 ];
 
 const reviewComments = [
@@ -127,22 +185,21 @@ async function seed() {
   // Create listings
   const listings = [];
   for (let i = 0; i < NUM_LISTINGS; i++) {
-  const owner = users[Math.floor(Math.random() * users.length)];
-  const typeObj = listingTypes[i % listingTypes.length];
-  const city = faker.location.city();
-  const country = faker.location.country();
-  const image = sampleImages[i % sampleImages.length]; // Assign images sequentially
-  const listing = new Listing({
-    title: `${typeObj.type} in ${city}`,
-    description: `${typeObj.desc}`,
-    image: image,
-    price: faker.number.int({ min: 500, max: 10000 }),
-    location: city,
-    country: country,
-    owner: owner._id
-  });
-  await listing.save();
-  listings.push(listing);
+    const owner = users[Math.floor(Math.random() * users.length)];
+    const typeObj = listingTypes[i % listingTypes.length];
+    const location = realLocations[i % realLocations.length];
+    const image = sampleImages[i % sampleImages.length]; // Assign images sequentially
+    const listing = new Listing({
+      title: `${typeObj.type} in ${location.city}`,
+      description: `${typeObj.desc}`,
+      image: image,
+      price: faker.number.int({ min: 500, max: 10000 }),
+      location: location.city,
+      country: location.country,
+      owner: owner._id
+    });
+    await listing.save();
+    listings.push(listing);
   }
 
   // Create reviews for each listing

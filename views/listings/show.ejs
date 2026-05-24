@@ -25,6 +25,12 @@
         </div>
       </div>
 
+      <!-- Map Section -->
+      <div class="col-6 offset-3 mt-4 mb-4">
+        <h4>Location on Map</h4>
+        <div id="listingMap" style="height: 400px; border-radius: 8px; margin-top: 10px;"></div>
+      </div>
+
       <% if (currUser && currUser._id.equals(listing.owner._id)) { %>
         <div class="row offset-3 mb-5 btns">
           <div class="d-flex align-items-center gap-5 mt-3">
@@ -106,4 +112,56 @@
       </div>
 
     </div>
+
+  <script>
+    // Initialize map with listing location
+    async function initializeMap() {
+      const location = "<%= listing.location %>";
+      const country = "<%= listing.country %>";
+      const title = "<%= listing.title %>";
+      
+      const searchQuery = `${location}, ${country}`;
+      
+      try {
+        // Geocode location using Nominatim (OpenStreetMap's free service - no API key needed)
+        const geocodeResponse = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(searchQuery)}&format=json`);
+        const geocodeData = await geocodeResponse.json();
+        
+        if (geocodeData.length === 0) {
+          console.error("Location not found");
+          document.getElementById('listingMap').innerHTML = '<div style="padding: 20px; text-align: center; color: #999;">Unable to locate on map</div>';
+          return;
+        }
+        
+        const { lat, lon } = geocodeData[0];
+        
+        // Initialize Leaflet map
+        const map = L.map('listingMap').setView([lat, lon], 13);
+        
+        // Add OpenStreetMap tile layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; OpenStreetMap contributors',
+          maxZoom: 19
+        }).addTo(map);
+        
+        // Add marker at listing location
+        const marker = L.marker([lat, lon]).addTo(map);
+        marker.bindPopup(`<div><strong>${title}</strong><br>${location}, ${country}</div>`).openPopup();
+        
+        // Add custom styling
+        map.zoomControl.setPosition('topright');
+      } catch (error) {
+        console.error('Error initializing map:', error);
+        document.getElementById('listingMap').innerHTML = '<div style="padding: 20px; text-align: center; color: #999;">Map could not be loaded</div>';
+      }
+    }
+    
+    // Initialize map when page loads
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initializeMap);
+    } else {
+      initializeMap();
+    }
+  </script>
+
   </body>

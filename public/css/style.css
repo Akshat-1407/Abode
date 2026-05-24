@@ -325,4 +325,18 @@ body {
   width: 6rem;
 }
 
+/* Map Styling */
+
+#listingMap {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border: 1px solid #e0e0e0;
+}
+
+#listingMap .leaflet-popup-content {
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
+
+#listingMap .leaflet-popup-tip {
+  background-color: white;
+}
 

@@ -2,7 +2,7 @@
   "engines": {
     "node": "22.15.0"
   },
-  "name": "Abode",
+  "name": "abode",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
